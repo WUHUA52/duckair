@@ -1,0 +1,30 @@
+<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;background:#222}canvas{display:block;image-rendering:pixelated}</style></head>
+<body><canvas id="c"></canvas>
+<script src="../src/core.js"></script><script src="../src/look.js"></script><script src="../src/kit.js"></script>
+<script src="../src/city-philly.js"></script>
+<script src="../src/city-nyc.js" onerror="void 0"></script><script src="../src/city-paris.js" onerror="void 0"></script>
+<script src="../src/city-tokyo.js" onerror="void 0"></script><script src="../src/city-london.js" onerror="void 0"></script>
+<script>
+const q = new URLSearchParams(location.search);
+const gen = { philadelphia: typeof genPhiladelphia!=='undefined'&&genPhiladelphia, nyc: typeof genNewYork!=='undefined'&&genNewYork, paris: typeof genParis!=='undefined'&&genParis, tokyo: typeof genTokyo!=='undefined'&&genTokyo, london: typeof genLondon!=='undefined'&&genLondon }[q.get('city')||'philadelphia'];
+const look = buildLook(q.get('tod')||'day', q.get('wx')||'clear');
+const t0 = performance.now();
+const city = gen();
+const t1 = performance.now();
+const S = +(q.get('s')||1);
+const x0 = +(q.get('x0')||0), span = +(q.get('w')||1536);
+const c = document.getElementById('c'); const ctx = c.getContext('2d');
+const rows = [['far', city.far, look.haze[0]], ['mid', city.mid, look.haze[1]], ['near', city.near, look.haze[2]]];
+let H = 0; for (const r of rows) H += r[1].h + 30;
+c.width = span*S; c.height = H*S; ctx.imageSmoothingEnabled = false;
+const sky = makeCanvas(10,10); bakeSky(look, sky, span, 200, 200);
+let y = 0; const tb = performance.now();
+for (const [nm, R, hz] of rows) {
+  const can = makeCanvas(10,10); bakeRaster(R, city.M, look, hz, can, {});
+  ctx.drawImage(sky, 0, 0, span, 200, 0, y*S, span*S, (R.h+30)*S);
+  ctx.drawImage(can, x0, 0, Math.min(span, can.width-x0), R.h, 0, (y+15)*S, Math.min(span, can.width-x0)*S, R.h*S);
+  y += R.h + 30;
+}
+const te = performance.now();
+document.title = 'gen ' + (t1-t0).toFixed(1) + 'ms bake ' + (te-tb).toFixed(1) + 'ms mats ' + city.M.list.length;
+</script></body></html>

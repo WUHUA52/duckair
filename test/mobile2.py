@@ -1,0 +1,5 @@
+D = 'window.__duckair'
+run('land', 844, 390, 3, [('wait', 4600), ('shot', '02'), ('eval', f'JSON.stringify({{dock: document.getElementById("dock").getBoundingClientRect().toJSON(), wrapped: document.getElementById("dock").classList.contains("is-wrapped"), bounds:{D}.bounds, VW:{D}.view.VW, VH:{D}.view.VH, S:{D}.view.S}})', 'layout')])
+run('tab', 768, 1024, 2, [('wait', 4600), ('shot', '02'), ('eval', f'JSON.stringify({{dock: document.getElementById("dock").getBoundingClientRect().toJSON(), wrapped: document.getElementById("dock").classList.contains("is-wrapped"), VW:{D}.view.VW, VH:{D}.view.VH, S:{D}.view.S}})', 'layout')])
+run('mob', 390, 844, 3, [('wait', 1500), ('eval', f'JSON.stringify({{VW:{D}.view.VW, VH:{D}.view.VH, S:{D}.view.S, wrapped: document.getElementById("dock").classList.contains("is-wrapped")}})', 'layout')])
+run('desk', 1440, 900, 1, [('wait', 1500), ('eval', f'JSON.stringify({{VW:{D}.view.VW, VH:{D}.view.VH, S:{D}.view.S, wrapped: document.getElementById("dock").classList.contains("is-wrapped"), dock: document.getElementById("dock").getBoundingClientRect().height}})', 'layout')])
